@@ -1,0 +1,38 @@
+    	body{
+    		background: #202028;
+    		color: #fff;
+    		font-family: sans-serif;
+    		font-size: 20px;
+    		text-align: center;
+    	}
+
+    	canvas {
+        border: solid .2em #fff;
+        height: 90vh;
+        align: center;
+      }
+
+      #dad{
+      	position: absolute; top:50; left:50;
+      }
+
+      #myname{
+      	color: red;
+      	/*position: absolute; top:50;*/
+      }
+
+      #restart{
+      	/*position:absolute; top:100; left:50;*/
+      	font-family: sans-serif;
+
+      }
+
+      #speed{
+      	/*position:absolute; top:150; left:50;*/
+      	font-family: sans-serif;
+      }
+
+       #instr{
+      	color: red;
+
+      }
