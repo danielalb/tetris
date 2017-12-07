@@ -1,6 +1,7 @@
 const canvas=document.getElementById('tetris');
 const context= canvas.getContext('2d');
 
+
 //scale everything by 20
 context.scale(20,20);
 
@@ -12,6 +13,7 @@ function arenaSweep(){
 				continue outer;
 			}
 		}
+		//when row gets cleared, play this sound
 		success.play();
 		//takes row out at y and fills it with 0
 		const row= arena.splice(y,1)[0].fill(0);
@@ -171,11 +173,13 @@ function playerReset(){
 	}
 }
 
+
 function gameOver(){
 	alert('Game Over! Your Score was: '+ player.score);
-		arena.forEach(row=>row.fill(0));
-		player.score=0;
-		updateScore();
+	arena.forEach(row=>row.fill(0));
+	whats_high_score();
+	player.score=0;
+	updateScore();
 
 }
 
@@ -297,6 +301,19 @@ function restart(){
 		updateScore();
 }
 
+function whats_high_score(){
+	var high_score;
+	if(player.score>high_score){
+		localStorage.setItem('high_score',player.score);
+	}
+	updateHighScore();
+	
+}
+
+function updateHighScore(){
+	document.getElementById('highscorelist').innerText = "Current High Score: "+localStorage.getItem("high_score");
+}
+
 //  function pause(){
 // // 	dropInterval=5000;
 // alert("Game Paused."+" Your score is "+player.score)
@@ -314,8 +331,6 @@ restart_button.onclick = restart;
 
 // let play_button = document.getElementById('play')
 // play_button.onclick = play;
-
-// document.getElementById("myAudio").loop = true;
 
 var music = new Howl({
   src: ['arcade_music.wav'],
