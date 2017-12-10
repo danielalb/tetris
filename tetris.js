@@ -319,10 +319,6 @@ function updateHighScore(high_score ){
 	document.getElementById('highscorelist').innerText = "Current High Score: "+high_score;
 }
 
-// function play(){
-// 	dropInterval=1000;
-// }
-
 let restart_button = document.getElementById('restart')
 restart_button.onclick = restart;
 
@@ -337,9 +333,6 @@ pause_button.onclick = function(){
 	}
 	console.log(player)
 }
-
-// let play_button = document.getElementById('play')
-// play_button.onclick = play;
 
 var music = new Howl({
   src: ['arcade_music.wav'],
