@@ -238,9 +238,10 @@ function update(time=0){
 	if(dropCounter>dropInterval){
 		playerDrop();
 	}
-
-	draw();
-	requestAnimationFrame(update);
+	if(player.pause==false){
+		draw();
+		requestAnimationFrame(update);
+	}
 }
 
 function updateScore(){
@@ -265,6 +266,7 @@ const player = {
 	pos:{x:0, y:0},
 	matrix:null,
 	score: 0,
+	pause: false
 }
 
 //key controls
@@ -302,22 +304,20 @@ function restart(){
 }
 
 function whats_high_score(){
-	var high_score;
+	var high_score = localStorage.getItem("high_score")
+	high_score = high_score || 0
 	if(player.score>high_score){
 		localStorage.setItem('high_score',player.score);
+		high_score = player.score
 	}
-	updateHighScore();
+	updateHighScore(high_score);
 	
 }
 
-function updateHighScore(){
-	document.getElementById('highscorelist').innerText = "Current High Score: "+localStorage.getItem("high_score");
+function updateHighScore(high_score ){
+	// XXX 
+	document.getElementById('highscorelist').innerText = "Current High Score: "+high_score;
 }
-
-//  function pause(){
-// // 	dropInterval=5000;
-// alert("Game Paused."+" Your score is "+player.score)
-//  }
 
 // function play(){
 // 	dropInterval=1000;
@@ -326,8 +326,17 @@ function updateHighScore(){
 let restart_button = document.getElementById('restart')
 restart_button.onclick = restart;
 
-// let pause_button = document.getElementById('pause')
-// pause_button.onclick = pause;
+let pause_button = document.getElementById('pause')
+pause_button.onclick = function(){ 
+	if(player.pause == true){
+		player.pause=false
+		update()
+	} 
+	else{
+		player.pause=true
+	}
+	console.log(player)
+}
 
 // let play_button = document.getElementById('play')
 // play_button.onclick = play;
