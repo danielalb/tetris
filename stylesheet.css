@@ -12,12 +12,16 @@
         align: center;
       }
 
+      type{
+        border: solid .2em #fff;
+      }
+
       #dad{
       	position: absolute; top:50; left:50;
       }
 
       #myname{
-      	color: red;
+      	color: white;
       	/*position: absolute; top:50;*/
       }
 
@@ -33,6 +37,7 @@
       }
 
        #instr{
+        font-size: 14pt;
       	color: red;
 
       }

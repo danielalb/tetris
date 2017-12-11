@@ -176,20 +176,25 @@ function playerReset(){
 	}
 }
 
-
+//what happens when you lose
 function gameOver(){
 	music.stop();
 	game_over.play();
-	alert('Game Over! Your Score was: '+ player.score);
+	if(player.score>localStorage.getItem("high_score"))
+		alert('Game Over! Your Score was: '+ player.score+'\nHigh Score: '+localStorage.getItem("high_score")+'\nNew High Score: '+ player.score);
+	else
+		alert('Game Over! Your Score was: '+ player.score+'\nHigh Score: '+localStorage.getItem("high_score"));
+	//wipes board
 	arena.forEach(row=>row.fill(0));
 	whats_high_score();
 	player.score=0;
 	updateScore();
-
 }
 
+//rotating the current piece
 function playerRotate(dir){
 	const pos = player.pos.x;
+	//what to do if pieces will go into each other's space
 	let offset=1;
 	rotate(player.matrix, dir);
 	while(collide(arena, player)){
@@ -203,6 +208,8 @@ function playerRotate(dir){
 	}
 }
 
+//the actual rotation of the piece- transposing the matrix by switching 
+//rows and columns to rotate the piece properly
 function rotate(matrix, dir){
 	for(let y=0; y<matrix.length; ++y){
 		for(let x=0; x<y; ++x){
@@ -225,12 +232,12 @@ function rotate(matrix, dir){
 	}
 }
 
+//pieces drop 1 space every 1 sec
 let dropCounter=0;
 let dropInterval=1000;
 
 let speed=document.getElementById('speed');
 speed.onchange=  e => dropInterval=e.target.value
-
 
 
 let lastTime=0;
@@ -309,17 +316,57 @@ document.addEventListener('keydown', event=>{
 	else if(event.keyCode===87){
 		playerRotate(1);
 	}
+	//if 'P' is clicked, pause
+	else if(event.keyCode===80){
+		playtopause();
+		if(player.pause == true){
+			player.pause=false;
+			music.play();
+			update();
+		} 
+		else{
+			player.pause=true
+			music.pause();
+		}
+	console.log(player)
+	}
+
+	//if 'P' is clicked, pause
+	else if(event.keyCode===82){
+		restart();
+	}
+	//if "E" is clicked, exchange for new piece
+	else if(event.keyCode===69){
+		if(player.score>=10){
+			player.score-=10;
+			updateScore;
+			playerReset();
+		}
+	}
 });
 
 //restart button restarts the game
 function restart(){
-	const pieces='ILJOTSZQU';
-	player.matrix=createPiece(pieces[pieces.length*Math.random()|0]);
-	player.pos.y=0;
-	player.pos.x=(arena[0].length/2|0)-(player.matrix[0].length/2|0);
+	changestart();
+	music.stop();
+	// const pieces='ILJOTSZQU';
+	// player.matrix=createPiece(pieces[pieces.length*Math.random()|0]);
+	// player.pos.y=0;
+	// player.pos.x=(arena[0].length/2|0)-(player.matrix[0].length/2|0);
 		arena.forEach(row=>row.fill(0));
 		player.score=0;
-		updateScore();
+		playGame();
+}
+
+//changes start/restart button
+function changestart(){
+	if(document.getElementById("restart").value=="Start") document.getElementById("restart").value="Restart";
+}
+
+//changes play/pause button
+function playtopause(){
+	if(document.getElementById("pause").value=="Pause") document.getElementById("pause").value="Play";
+	else document.getElementById("pause").value="Pause";
 }
 
 //checks the HS
@@ -335,9 +382,9 @@ function whats_high_score(){
 }
 
 //updates HS 
-function updateHighScore(high_score ){
+function updateHighScore(high_score){
 	// XXX 
-	document.getElementById('highscorelist').innerText = "Current High Score: "+high_score;
+	document.getElementById('highscorelist').innerText = "\nCurrent High Score: "+high_score;
 }
 
 let restart_button = document.getElementById('restart')
@@ -346,6 +393,7 @@ restart_button.onclick = restart;
 
 let pause_button = document.getElementById('pause')
 pause_button.onclick = function(){ 
+	playtopause();
 	if(player.pause == true){
 		player.pause=false
 		music.play();
@@ -360,7 +408,7 @@ pause_button.onclick = function(){
 
 var music = new Howl({
   src: ['arcade_music.wav'],
-  autoplay: true,
+  autoplay: false,
   loop: true,
   volume: 0.5,
   onend: function() {
@@ -376,15 +424,16 @@ var game_over = new Howl({
   src: ['game_over.wav'],
 });
 
-//today's date
+//checks time
 var currentTime = new Date();
 console.log(currentTime)
-if("01:00:00"<currentTime<"06:30:00") console.log("It's too late to be playing!")
-else console.log("not between 1am-6:30am")
+if("01:30:00"<currentTime<"06:30:00") console.log("It's too late to be playing!")
+else console.log("not between 1:30am-6:30am")
 
 
-playerReset();
-updateScore();
-update();
-whats_high_score();
-
+function playGame(){
+	playerReset();
+	updateScore();
+	update();
+	whats_high_score();
+}

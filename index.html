@@ -5,13 +5,21 @@
    type = "text/css"
    href = "stylesheet.css" />
 
-   <script>
-//Ain't Gonna Work On Saturday
-var now = new Date();
-if (now.getDay()===6) {
-  window.location.href = "http://www.chabad.org/library/article_cdo/aid/633659/jewish/What-Is-Shabbat.htm";
-  console.log("Shabbos!")
-}
+<!-- Ain't Gonna Work On Saturday -->
+	<script>
+		function redirect(){
+				window.location.href = "http://www.chabad.org/library/article_cdo/aid/633659/jewish/What-Is-Shabbat.htm";
+				console.log("Shabbos!")
+	        }
+
+		var now = new Date();
+		if (now.getDay()===6) {
+	  		document.write("It is Shabbos today! You are being redirected.");
+	            setTimeout('redirect()', 7000);
+		}
+		else{ 
+			console.log(6-now.getDay()+" days until Shabbos!")
+		}
 </script>
     
 </head>
@@ -19,9 +27,8 @@ if (now.getDay()===6) {
 
 	<div id="score"></div>
 	<div id="dad">
-		<div id="myname">Tetris<br>by Daniel Albert</div>
-		<div id="instr">Q and W<br>to rotate</div>
-		<button id='restart'>Restart!</button>
+		<div id="myname">Tetris<br>by Daniel Albert<br><br></div>
+		<input onclick="start()" type="button" value="Start" id="restart" />
 
 		<select name="speed" id="speed">
 			<option value="200">Very Fast</option>
@@ -29,16 +36,10 @@ if (now.getDay()===6) {
 			<option value="1000" selected>Normal</option>
 			<option value="2000">Slow</option>
 		</select>
-
-		<button id='pause'>Pause</button>
+		<input onclick="changebuttons()" type="button" value="Pause" id="pause" />
 		<div id="highscorelist"> </div>
+		<div id="instr"><br><br>Q and W to rotate<br><br>Arrows to move<br><br>E to exchange piece<br><br>-10 points per switch </div>
 	</div>
-    
-
-<!-- <audio 
-  src= "arcade_music.wav"
-  autoplay>
-</audio> -->
 
 <canvas id="tetris" width="240" height="400" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.0.5/howler.core.min.js"></script>
