@@ -1,3 +1,32 @@
+function Shabbosredirect(){
+				window.location.href = "http://www.chabad.org/library/article_cdo/aid/633659/jewish/What-Is-Shabbat.htm";
+				console.log("Shabbos!")
+	        }
+
+		var now = new Date();
+		if (now.getDay()===6) {
+	  		alert("It is Shabbos today! You are being redirected.");
+	        Shabbosredirect();
+		}
+		else{ 
+			console.log(6-now.getDay()+" days until Shabbos!");
+		}
+
+		function Bedtimeredirect(){
+			window.location.href = "https://sleepjunkies.com/blog/video-games-sleep-habits/";
+			alert("Go to sleep!")
+	    }
+
+		//checks time
+		var currentTime = new Date();
+		console.log(currentTime)
+		console.log(currentTime.getHours()+":"+currentTime.getMinutes())
+		if(currentTime.getHours()<6 && currentTime.getHours()>=1 ){
+			document.write("It's too late to be playing!");
+			Bedtimeredirect();
+		}
+		else console.log("not between 1:30am-6:30am");
+
 const canvas=document.getElementById('tetris');
 const context= canvas.getContext('2d');
 
@@ -423,12 +452,6 @@ var success = new Howl({
 var game_over = new Howl({
   src: ['game_over.wav'],
 });
-
-//checks time
-var currentTime = new Date();
-console.log(currentTime)
-if("01:30:00"<currentTime<"06:30:00") console.log("It's too late to be playing!")
-else console.log("not between 1:30am-6:30am")
 
 
 function playGame(){
