@@ -20,9 +20,8 @@ function arenaSweep(){
 		//put it back on top
 		arena.unshift(row);
 		++y;
-
-		player.score+=rowCount*10;
-		rowCount*=2;
+			player.score+=rowCount*10;
+			rowCount*=2;
 	}
 }
 
@@ -144,6 +143,9 @@ function merge(arena, player){
 }
 
 function playerDrop(){
+	//check if music is playing, if not, play it
+	if(music.playing()==false) music.play();
+	//the rest of this function starts dropping the piece
 	player.pos.y++;
 	if(collide(arena,player)){
 		player.pos.y--;
@@ -163,7 +165,8 @@ function playerMove(dir){
 	}
 }
 
-function playerReset(){
+//resets the player back to first position, putting the piece in the top, center
+function playerReset(){ 
 	const pieces='ILJOTSZQU';
 	player.matrix=createPiece(pieces[pieces.length*Math.random()|0]);
 	player.pos.y=0;
@@ -175,6 +178,8 @@ function playerReset(){
 
 
 function gameOver(){
+	music.stop();
+	game_over.play();
 	alert('Game Over! Your Score was: '+ player.score);
 	arena.forEach(row=>row.fill(0));
 	whats_high_score();
@@ -226,42 +231,55 @@ let dropInterval=1000;
 let speed=document.getElementById('speed');
 speed.onchange=  e => dropInterval=e.target.value
 
-//dropInterval=target.value
+
 
 let lastTime=0;
+
 function update(time=0){
 	const deltatime=time-lastTime;
 	lastTime=time;
-
 	dropCounter+=deltatime
-	// if(pause_button.onclick =)
 	if(dropCounter>dropInterval){
 		playerDrop();
 	}
+	//keep track of pause state
 	if(player.pause==false){
 		draw();
 		requestAnimationFrame(update);
 	}
 }
 
+//get HS from memory
 function updateScore(){
 	document.getElementById('score').innerText = player.score;
 }
+
+//correspond to 1-9 on game pieces
 const colors=[
 	null,
+	//1- pink- T
 	'#FF0D72',
+	//2- light blue- O
     '#0DC2FF',
+    //3- light green- L
     '#0DFF72',
+    //4- purple-ish- J
     '#F538FF',
+    //5- orange- I
     '#FF8E0D',
+    //6- yellow- S
     '#FFE138',
+    //7- darker blue- Z
     '#3877FF',
+    //8- gray-ish- Q
     '#B8BEC6',
+    //9- red- U
     '#E20909',
 ]
 
 const arena= createMatrix(12,20);
 
+//Player keeps track of current piece
 const player = {
 	pos:{x:0, y:0},
 	matrix:null,
@@ -293,6 +311,7 @@ document.addEventListener('keydown', event=>{
 	}
 });
 
+//restart button restarts the game
 function restart(){
 	const pieces='ILJOTSZQU';
 	player.matrix=createPiece(pieces[pieces.length*Math.random()|0]);
@@ -303,6 +322,7 @@ function restart(){
 		updateScore();
 }
 
+//checks the HS
 function whats_high_score(){
 	var high_score = localStorage.getItem("high_score")
 	high_score = high_score || 0
@@ -314,6 +334,7 @@ function whats_high_score(){
 	
 }
 
+//updates HS 
 function updateHighScore(high_score ){
 	// XXX 
 	document.getElementById('highscorelist').innerText = "Current High Score: "+high_score;
@@ -322,14 +343,17 @@ function updateHighScore(high_score ){
 let restart_button = document.getElementById('restart')
 restart_button.onclick = restart;
 
+
 let pause_button = document.getElementById('pause')
 pause_button.onclick = function(){ 
 	if(player.pause == true){
 		player.pause=false
+		music.play();
 		update()
 	} 
 	else{
 		player.pause=true
+		music.pause();
 	}
 	console.log(player)
 }
@@ -348,7 +372,19 @@ var success = new Howl({
   src: ['success_sound.wav'],
 });
 
+var game_over = new Howl({
+  src: ['game_over.wav'],
+});
+
+//today's date
+var currentTime = new Date();
+console.log(currentTime)
+if("01:00:00"<currentTime<"06:30:00") console.log("It's too late to be playing!")
+else console.log("not between 1am-6:30am")
+
+
 playerReset();
 updateScore();
 update();
+whats_high_score();
 

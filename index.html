@@ -4,6 +4,15 @@
     <link rel = "stylesheet"
    type = "text/css"
    href = "stylesheet.css" />
+
+   <script>
+//Ain't Gonna Work On Saturday
+var now = new Date();
+if (now.getDay()===6) {
+  window.location.href = "http://www.chabad.org/library/article_cdo/aid/633659/jewish/What-Is-Shabbat.htm";
+  console.log("Shabbos!")
+}
+</script>
     
 </head>
 <body>
@@ -22,7 +31,7 @@
 		</select>
 
 		<button id='pause'>Pause</button>
-		<div id="highscorelist">High Score:<br> </div>
+		<div id="highscorelist"> </div>
 	</div>
     
 
