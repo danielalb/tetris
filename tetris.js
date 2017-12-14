@@ -1,4 +1,4 @@
-//Ain't Gonna Work on Saturday- Saturday is the Jewish sabbath, known as "Shabbos", 
+//Ain't Gonna Work on Saturday- Saturday is the Jewish Sabbath, known as "Shabbos",
 //it is the Jewish day of rest- and as such, my website will not run if it is Saturday
 function Shabbosredirect(){
 				window.location.href = "http://www.chabad.org/library/article_cdo/aid/633659/jewish/What-Is-Shabbat.htm";
@@ -29,12 +29,18 @@ if(currentTime.getHours()<6 && currentTime.getHours()>=1 ){
 else console.log("not between 1:30am-6:30am");
 
 //The actual game code starts here
+
+//create canvas
 const canvas=document.getElementById('tetris');
 const context= canvas.getContext('2d');
+//create next piece canvas
+const nextCanvas = document.getElementById('next');
+const nextPieceContext= nextCanvas.getContext('2d');
 
-
-//scale everything by 20
+//scale game by 20
 context.scale(20,20);
+//scale next piece by 50
+nextPieceContext.scale(50,50);
 
 function arenaSweep(){
 	let rowCount=1;
@@ -135,17 +141,17 @@ function createPiece(type){
 			[0,0,0],
 		];
 	}
-	else if(type==='R'){
-		return [
-			[0,8,8],
-			[8,8,8],
-			[0,0,0],
-		];
-	}
 	else if(type==='U'){
 		return [
 			[9,0,9],
 			[9,9,9],
+			[0,0,0],
+		];
+	}
+	else if(type==='R'){
+		return [
+			[0,10,10],
+			[10,10,10],
 			[0,0,0],
 		];
 	}
@@ -166,10 +172,6 @@ function drawMatrix(matrix, offset){
 			if(value!==0){
 				context.fillStyle=colors[value];
 				context.fillRect(x+offset.x, y+offset.y, 1, 1);
-				context.stroke();
-				context.strokeStyle = 'black';
-				context.stroke()
-
 			}
 		});
 	});
@@ -198,7 +200,6 @@ function playerDrop(){
 		updateScore();
 	}
 	dropCounter=0;
-
 }
 
 function playerMove(dir){
@@ -208,56 +209,45 @@ function playerMove(dir){
 	}
 }
 
-var turn=500;
-var piece;
-//tell us what the next piece will be
-function next_piece(piece){
+function get_random_piece() {
 	const pieces='ILJOTSZQUR';
-	//--!
-	//between the --! tells you the current piece you're on- work in progress
-	// player.matrix=createPiece(pieces[pieces.length*Math.random()|0]);
-	// document.getElementById('nextpiece').innerText="Next piece:\n"+player.matrix;
-	//--!
-		if(turn==500){
-			var currpiece=createPiece(pieces[pieces.length*Math.random()|0]);
-			var newpiece=createPiece(pieces[pieces.length*Math.random()|0]);
-			console.log(newpiece);
-			player.matrix=currpiece;
-			document.getElementById('nextpiece').innerText="Next piece:\n"+newpiece;
-			turn-=1;
-			console.log(turn);
-			return newpiece;
-
-		}
-		else if(turn%2==1){
-			console.log("new piece is "+newpiece);
-			player.matrix=newpiece;
-			turn-=1;
-			var currpiece=createPiece(pieces[pieces.length*Math.random()|0]);
-			var newpiece=createPiece(pieces[pieces.length*Math.random()|0]);
-			document.getElementById('nextpiece').innerText="Next piece:\n"+ currpiece;
-		}
-		else{
-			player.matrix=currpiece;
-			turn-=1;
-			var currpiece=createPiece(pieces[pieces.length*Math.random()|0]);
-			var newpiece=createPiece(pieces[pieces.length*Math.random()|0]);
-			document.getElementById('nextpiece').innerText="Next piece:\n"+ newpiece;
-		}
+	return createPiece(pieces[pieces.length*Math.random()|0]);
 }
 
-//resets the player back to first position, putting the piece in the top, center
-function playerReset(){ 
-	next_piece(piece);
+function updatePieces() {
+	if (player.matrix === null) {
+		player.matrix  = get_random_piece();
+		player.nextPiece = get_random_piece();
+	} else {
+		player.matrix = player.nextPiece;
+		player.nextPiece = get_random_piece();
+	}
+}
+
+function updateText() {
+	nextPieceContext.fillStyle='#202028';
+	nextPieceContext.fillRect(0,0,nextCanvas.width, nextCanvas.height);
+	player.nextPiece.forEach((row, y) =>{
+		row.forEach((value,x) =>{
+			console.log(value)
+			if(value!==0){
+				nextPieceContext.fillStyle=colors[value];
+				nextPieceContext.fillRect(x, y, 1, 1);
+			}
+		});
+	});
+}
+
+function playerReset(){
+	updatePieces();
+	updateText();
+	//resets the player back to first position, putting the piece in the top, center
 	player.pos.y=0;
 	player.pos.x=(arena[0].length/2|0)-(player.matrix[0].length/2|0);
 	if(collide(arena,player)){
 		gameOver();
 	}
 }
-
-
-
 
 //what happens when you lose
 function gameOver(){
@@ -291,7 +281,7 @@ function playerRotate(dir){
 	}
 }
 
-//the actual rotation of the piece- transposing the matrix by switching 
+//the actual rotation of the piece- transposing the matrix by switching
 //rows and columns to rotate the piece properly
 function rotate(matrix, dir){
 	for(let y=0; y<matrix.length; ++y){
@@ -344,7 +334,7 @@ function updateScore(){
 	document.getElementById('score').innerText = player.score;
 }
 
-//correspond to 1-9 on game pieces
+//correspond to numbers on game pieces
 const colors=[
 	null,
 	//1- pink- T
@@ -365,6 +355,8 @@ const colors=[
     '#B8BEC6',
     //9- red- U
     '#E20909',
+    //10
+    '#FFFFFF',
 ]
 
 const arena= createMatrix(12,20);
@@ -373,6 +365,7 @@ const arena= createMatrix(12,20);
 const player = {
 	pos:{x:0, y:0},
 	matrix:null,
+	nextPiece: null,
 	score: 0,
 	pause: false
 }
@@ -406,15 +399,14 @@ document.addEventListener('keydown', event=>{
 			player.pause=false;
 			music.play();
 			update();
-		} 
+		}
 		else{
 			player.pause=true
 			music.pause();
 		}
 	console.log(player)
 	}
-
-	//if 'P' is clicked, pause
+	//if 'R' is clicked, pause
 	else if(event.keyCode===82){
 		restart();
 	}
@@ -422,25 +414,18 @@ document.addEventListener('keydown', event=>{
 	else if(event.keyCode===69){
 		if(player.score>=10){
 			player.score-=10;
-			updateScore;
+			updateScore();
 			playerReset();
 		}
 	}
 });
 
-var first_move;
 //restart button restarts the game
 function restart(){
 	changestart();
 	music.stop();
-	// const pieces='ILJOTSZQUR';
-	// player.matrix=createPiece(pieces[pieces.length*Math.random()|0]);
-	// player.pos.y=0;
-	// player.pos.x=(arena[0].length/2|0)-(player.matrix[0].length/2|0);
 		arena.forEach(row=>row.fill(0));
 		player.score=0;
-		//it will be true on first move (because any bool with a value is true)
-		first_move=1;
 		playGame();
 }
 
@@ -464,12 +449,11 @@ function whats_high_score(){
 		high_score = player.score
 	}
 	updateHighScore(high_score);
-	
+
 }
 
-//updates HS 
+//updates HS
 function updateHighScore(high_score){
-	// XXX 
 	document.getElementById('highscorelist').innerText = "\nCurrent High Score: "+high_score;
 }
 
@@ -478,13 +462,13 @@ restart_button.onclick = restart;
 
 
 let pause_button = document.getElementById('pause')
-pause_button.onclick = function(){ 
+pause_button.onclick = function(){
 	playtopause();
 	if(player.pause == true){
 		player.pause=false
 		music.play();
 		update()
-	} 
+	}
 	else{
 		player.pause=true
 		music.pause();
@@ -509,7 +493,6 @@ var success = new Howl({
 var game_over = new Howl({
   src: ['game_over.wav'],
 });
-
 
 function playGame(){
 	playerReset();
