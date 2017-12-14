@@ -1,43 +1,44 @@
-    	body{
-    		background: #202028;
-    		color: #fff;
-    		font-family: sans-serif;
-    		font-size: 20px;
-    		text-align: center;
-    	}
+body{
+  background: #202028;
+  color: #fff;
+  font-family: sans-serif;
+  font-size: 20px;
+  text-align: center;
+}
 
-    	canvas {
-        border: solid .2em #fff;
-        height: 90vh;
-        align: center;
-      }
+canvas {
+  border: solid .2em #fff;
+  height: 90vh;
+  align: center;
+}
 
-      type{
-        border: solid .2em #fff;
-      }
+#dad-left{
+  position: absolute; top:50; left:50;
+}
 
-      #dad{
-      	position: absolute; top:50; left:50;
-      }
+#myname{
+  color: white;
+}
 
-      #myname{
-      	color: white;
-      	/*position: absolute; top:50;*/
-      }
+#restart{
+  font-family: sans-serif;
+}
 
-      #restart{
-      	/*position:absolute; top:100; left:50;*/
-      	font-family: sans-serif;
+#speed{
+  font-family: sans-serif;
+}
 
-      }
+#instr{
+  font-size: 14pt;
+  color: red;
+}
 
-      #speed{
-      	/*position:absolute; top:150; left:50;*/
-      	font-family: sans-serif;
-      }
+#dad-right{
+  position: absolute; top:50; left: 950;
+  font-family: sans-serif;
+}
 
-       #instr{
-        font-size: 14pt;
-      	color: red;
-
-      }
+#nextpiece{
+  border: 1px solid white;
+  /*color: ;*/
+}

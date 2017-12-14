@@ -14,8 +14,11 @@
 <body>
 
 	<div id="score"></div>
-	<div id="dad">
+
+	<div id="dad-left">
+
 		<div id="myname">Tetris<br>by Daniel Albert<br><br></div>
+
 		<input onclick="start()" type="button" value="Start" id="restart" />
 
 		<select name="speed" id="speed">
@@ -24,9 +27,17 @@
 			<option value="1000" selected>Normal</option>
 			<option value="2000">Slow</option>
 		</select>
+
 		<input onclick="changebuttons()" type="button" value="Pause" id="pause" />
+
+		<div id="instr"><br><br>Complete full rows with no spaces for points<br><br>10 points per full line plus bonus for multiple lines<br><br>Full lines will disapper<br><br>Q and W rotate the piece<br><br>Left and Right arrows to move side to side<br><br>Down arrow will bring the piece down faster<br><br>E to exchange piece; -10 points per switch </div>
+	</div>
+
+	<div id="dad-right">
+
 		<div id="highscorelist"> </div>
-		<div id="instr"><br><br>Q and W to rotate<br><br>Arrows to move<br><br>E to exchange piece<br><br>-10 points per switch </div>
+				
+		<div id="nextpiece"></div>
 	</div>
 
 <canvas id="tetris" width="240" height="400" />

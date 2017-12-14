@@ -1,32 +1,34 @@
+//Ain't Gonna Work on Saturday- Saturday is the Jewish sabbath, known as "Shabbos", 
+//it is the Jewish day of rest- and as such, my website will not run if it is Saturday
 function Shabbosredirect(){
 				window.location.href = "http://www.chabad.org/library/article_cdo/aid/633659/jewish/What-Is-Shabbat.htm";
 				console.log("Shabbos!")
 	        }
+//checks if it's Saturday
+var now = new Date();
+if (now.getDay()===6) {
+	alert("It is Shabbos today! You are being redirected.");
+	Shabbosredirect();
+}
+//if it's not, it will tell you how many days until Shabbos
+else console.log(6-now.getDay()+" days until Shabbos!");
 
-		var now = new Date();
-		if (now.getDay()===6) {
-	  		alert("It is Shabbos today! You are being redirected.");
-	        Shabbosredirect();
-		}
-		else{ 
-			console.log(6-now.getDay()+" days until Shabbos!");
-		}
+//We often play games very late at night, this will not allow you to play between 1am and 6am
+function Bedtimeredirect(){
+		window.location.href = "https://sleepjunkies.com/blog/video-games-sleep-habits/";
+		alert("Go to sleep!")
+}
+//checks time
+var currentTime = new Date();
+console.log(currentTime)
+console.log(currentTime.getHours()+":"+currentTime.getMinutes())
+if(currentTime.getHours()<6 && currentTime.getHours()>=1 ){
+	document.write("It's too late to be playing!");
+	Bedtimeredirect();
+}
+else console.log("not between 1:30am-6:30am");
 
-		function Bedtimeredirect(){
-			window.location.href = "https://sleepjunkies.com/blog/video-games-sleep-habits/";
-			alert("Go to sleep!")
-	    }
-
-		//checks time
-		var currentTime = new Date();
-		console.log(currentTime)
-		console.log(currentTime.getHours()+":"+currentTime.getMinutes())
-		if(currentTime.getHours()<6 && currentTime.getHours()>=1 ){
-			document.write("It's too late to be playing!");
-			Bedtimeredirect();
-		}
-		else console.log("not between 1:30am-6:30am");
-
+//The actual game code starts here
 const canvas=document.getElementById('tetris');
 const context= canvas.getContext('2d');
 
@@ -54,6 +56,7 @@ function arenaSweep(){
 	}
 }
 
+//checking if it collides with the walls or the bottom of the canvas or with any other pieces
 function collide(arena,player){
 	const [m, o]=[player.matrix, player.pos];
 	for(let y=0; y<m.length; ++y){
@@ -132,6 +135,13 @@ function createPiece(type){
 			[0,0,0],
 		];
 	}
+	else if(type==='R'){
+		return [
+			[0,8,8],
+			[8,8,8],
+			[0,0,0],
+		];
+	}
 	else if(type==='U'){
 		return [
 			[9,0,9],
@@ -156,6 +166,10 @@ function drawMatrix(matrix, offset){
 			if(value!==0){
 				context.fillStyle=colors[value];
 				context.fillRect(x+offset.x, y+offset.y, 1, 1);
+				context.stroke();
+				context.strokeStyle = 'black';
+				context.stroke()
+
 			}
 		});
 	});
@@ -194,16 +208,56 @@ function playerMove(dir){
 	}
 }
 
+var turn=500;
+var piece;
+//tell us what the next piece will be
+function next_piece(piece){
+	const pieces='ILJOTSZQUR';
+	//--!
+	//between the --! tells you the current piece you're on- work in progress
+	// player.matrix=createPiece(pieces[pieces.length*Math.random()|0]);
+	// document.getElementById('nextpiece').innerText="Next piece:\n"+player.matrix;
+	//--!
+		if(turn==500){
+			var currpiece=createPiece(pieces[pieces.length*Math.random()|0]);
+			var newpiece=createPiece(pieces[pieces.length*Math.random()|0]);
+			console.log(newpiece);
+			player.matrix=currpiece;
+			document.getElementById('nextpiece').innerText="Next piece:\n"+newpiece;
+			turn-=1;
+			console.log(turn);
+			return newpiece;
+
+		}
+		else if(turn%2==1){
+			console.log("new piece is "+newpiece);
+			player.matrix=newpiece;
+			turn-=1;
+			var currpiece=createPiece(pieces[pieces.length*Math.random()|0]);
+			var newpiece=createPiece(pieces[pieces.length*Math.random()|0]);
+			document.getElementById('nextpiece').innerText="Next piece:\n"+ currpiece;
+		}
+		else{
+			player.matrix=currpiece;
+			turn-=1;
+			var currpiece=createPiece(pieces[pieces.length*Math.random()|0]);
+			var newpiece=createPiece(pieces[pieces.length*Math.random()|0]);
+			document.getElementById('nextpiece').innerText="Next piece:\n"+ newpiece;
+		}
+}
+
 //resets the player back to first position, putting the piece in the top, center
 function playerReset(){ 
-	const pieces='ILJOTSZQU';
-	player.matrix=createPiece(pieces[pieces.length*Math.random()|0]);
+	next_piece(piece);
 	player.pos.y=0;
 	player.pos.x=(arena[0].length/2|0)-(player.matrix[0].length/2|0);
 	if(collide(arena,player)){
 		gameOver();
 	}
 }
+
+
+
 
 //what happens when you lose
 function gameOver(){
@@ -374,16 +428,19 @@ document.addEventListener('keydown', event=>{
 	}
 });
 
+var first_move;
 //restart button restarts the game
 function restart(){
 	changestart();
 	music.stop();
-	// const pieces='ILJOTSZQU';
+	// const pieces='ILJOTSZQUR';
 	// player.matrix=createPiece(pieces[pieces.length*Math.random()|0]);
 	// player.pos.y=0;
 	// player.pos.x=(arena[0].length/2|0)-(player.matrix[0].length/2|0);
 		arena.forEach(row=>row.fill(0));
 		player.score=0;
+		//it will be true on first move (because any bool with a value is true)
+		first_move=1;
 		playGame();
 }
 
