@@ -7,8 +7,13 @@ function Shabbosredirect(){
 //checks if it's Saturday
 var now = new Date();
 if (now.getDay()===6) {
-	alert("It is Shabbos today! You are being redirected.");
-	Shabbosredirect();
+	var answer= prompt("It is Shabbos today! You are being redirected.");
+	//allows to override the redirect if you type "shabbos is over"
+	if (answer==="shabbos is over"){
+		alert("Shavuah Tov!");
+		console.log("Shavuah tov");
+	}
+	else Shabbosredirect();
 }
 //if it's not, it will tell you how many days until Shabbos
 else console.log(6-now.getDay()+" days until Shabbos!");
@@ -22,7 +27,7 @@ function Bedtimeredirect(){
 var currentTime = new Date();
 console.log(currentTime)
 console.log(currentTime.getHours()+":"+currentTime.getMinutes())
-if(currentTime.getHours()<6 && currentTime.getHours()>=1 ){
+if(currentTime.getHours()<6 && currentTime.getHours()>=2 ){
 	document.write("It's too late to be playing!");
 	Bedtimeredirect();
 }
@@ -155,6 +160,14 @@ function createPiece(type){
 			[0,0,0],
 		];
 	}
+	else if(type==='R'){
+		return [
+			[0,10,10],
+			[10,10,10],
+			[0,0,0],
+			[0,0,0],
+		];
+	}
 }
 
 //general draw function
@@ -229,7 +242,6 @@ function updateText() {
 	nextPieceContext.fillRect(0,0,nextCanvas.width, nextCanvas.height);
 	player.nextPiece.forEach((row, y) =>{
 		row.forEach((value,x) =>{
-			console.log(value)
 			if(value!==0){
 				nextPieceContext.fillStyle=colors[value];
 				nextPieceContext.fillRect(x, y, 1, 1);
