@@ -5,33 +5,37 @@ function Shabbosredirect(){
 				console.log("Shabbos!")
 	        }
 //checks if it's Saturday
-var now = new Date();
-if (now.getDay()===6) {
-	var answer= prompt("It is Shabbos today! You are being redirected.");
-	//allows to override the redirect if you type "shabbos is over"
-	if (answer==="shabbos is over"){
-		alert("Shavuah Tov!");
-		console.log("Shavuah tov");
+function checkdate(){
+	var now = new Date();
+	if (now.getDay()===6) {
+		var answer= prompt("It is Shabbos today! You are being redirected.");
+		//allows to override the redirect if you type "shabbos is over"
+		if (answer==="shabbos is over"){
+			alert("Shavuah Tov!");
+			console.log("Shavuah tov");
+		}
+		else Shabbosredirect();
 	}
-	else Shabbosredirect();
+	//if it's not, it will tell you how many days until Shabbos
+	else console.log(6-now.getDay()+" days until Shabbos!");
 }
-//if it's not, it will tell you how many days until Shabbos
-else console.log(6-now.getDay()+" days until Shabbos!");
 
-//We often play games very late at night, this will not allow you to play between 1am and 6am
+//We often play games very late at night, this will not allow you to play between 2am and 6am
 function Bedtimeredirect(){
 		window.location.href = "https://sleepjunkies.com/blog/video-games-sleep-habits/";
 		alert("Go to sleep!")
 }
 //checks time
-var currentTime = new Date();
-console.log(currentTime)
-console.log(currentTime.getHours()+":"+currentTime.getMinutes())
-if(currentTime.getHours()<6 && currentTime.getHours()>=2 ){
-	document.write("It's too late to be playing!");
-	Bedtimeredirect();
+function checktime(){
+	var currentTime = new Date();
+	console.log(currentTime)
+	console.log(currentTime.getHours()+":"+currentTime.getMinutes())
+	if(currentTime.getHours()<6 && currentTime.getHours()>=2 ){
+		document.write("It's too late to be playing!");
+		Bedtimeredirect();
+	}
+	else console.log("not between 2:00am-6:00am");
 }
-else console.log("not between 1:30am-6:30am");
 
 //The actual game code starts here
 
@@ -274,6 +278,7 @@ function gameOver(){
 	whats_high_score();
 	player.score=0;
 	updateScore();
+	checktime();
 }
 
 //rotating the current piece
@@ -507,6 +512,8 @@ var game_over = new Howl({
 });
 
 function playGame(){
+	checktime();
+	checkdate();
 	playerReset();
 	updateScore();
 	update();
